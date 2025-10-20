@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="fa">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>سایت تستی من</title>
+</head>
+<body>
+  <h1>سلام دنیا! 👋</h1>
+  <p>این اولین صفحه‌ی من روی GitHub Pages هست.</p>
+  <button onclick="alert('خوش اومدی!')">کلیک کن</button>
+</body>
+</html>
