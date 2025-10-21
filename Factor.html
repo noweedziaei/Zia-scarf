@@ -1,101 +1,194 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ثبت فاکتور</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #fff;
-      display: flex;
-      justify-content: center;
-      padding: 20px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فاکتور Zia Scarf</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    padding: 10px;
+  }
 
-    .invoice-form {
-      background-color: #111;
-      padding: 20px;
-      border-radius: 12px;
-      width: 100%;
-      max-width: 400px;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
 
-    .invoice-form label {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
+  .logo {
+    font-weight: bold;
+    font-size: 20px;
+  }
 
-    .invoice-form input,
-    .invoice-form textarea,
-    .invoice-form select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      font-size: 14px;
-    }
+  .invoice-info {
+    text-align: left;
+    font-size: 14px;
+  }
 
-    .invoice-form textarea {
-      resize: vertical;
-      min-height: 60px;
-    }
+  .customer-info {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
 
-    .invoice-form button {
-      background-color: #fff;
-      color: #111;
-      border: none;
-      padding: 15px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: transform 0.1s, background-color 0.2s;
-    }
+  .customer-left, .customer-right {
+    background-color: #111;
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    flex: 1 1 45%;
+    min-width: 150px;
+  }
 
-    .invoice-form button:hover {
-      background-color: #eee;
-      transform: scale(1.03);
-    }
-  </style>
+  .customer-left label, .customer-right label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .customer-right input {
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+    border: none;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+  }
+
+  th, td {
+    border: 1px solid #111;
+    padding: 8px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  th {
+    background-color: #111;
+    color: #fff;
+  }
+
+  tfoot td {
+    font-weight: bold;
+  }
+
+  button {
+    background-color: #111;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  button:hover {
+    background-color: #333;
+  }
+
+  input[type="number"] {
+    width: 60px;
+    text-align: center;
+  }
+
+</style>
 </head>
 <body>
-  <form class="invoice-form" onsubmit="submitInvoice(event)">
-    <h2 style="text-align:center;">ثبت فاکتور</h2>
 
-    <label for="customer">نام مشتری:</label>
-    <input type="text" id="customer" name="customer" placeholder="مثلاً: علی رضایی" required>
+<div class="header">
+  <div class="invoice-info">
+    <div>تاریخ: <span id="date"></span></div>
+    <div>شماره فاکتور: <span id="invoice-number">001</span></div>
+  </div>
+  <div class="logo">Zia Scarf</div>
+</div>
 
-    <label for="date">تاریخ:</label>
-    <input type="date" id="date" name="date" required>
+<div class="customer-info">
+  <div class="customer-left">
+    <label>تلفن:</label>
+    <div>0912-XXXXXXX</div>
+    <label>آدرس:</label>
+    <div>تهران، خیابان مثال</div>
+  </div>
+  <div class="customer-right">
+    <label>نام مشتری:</label>
+    <input type="text" id="customer-name" placeholder="مثلاً: علی رضایی">
+  </div>
+</div>
 
-    <label for="amount">مبلغ:</label>
-    <input type="number" id="amount" name="amount" placeholder="مثلاً: 500000" required>
+<table id="invoice-table">
+  <thead>
+    <tr>
+      <th>کد کالا</th>
+      <th>نام کالا</th>
+      <th>تعداد</th>
+      <th>قیمت واحد</th>
+      <th>جمع</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><input type="text" placeholder="123"></td>
+      <td><input type="text" placeholder="کالا"></td>
+      <td><input type="number" value="1" min="1" onchange="updateRow(this)"></td>
+      <td><input type="number" value="0" min="0" onchange="updateRow(this)"></td>
+      <td class="row-total">0</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="4">جمع کل</td>
+      <td id="grand-total">0</td>
+    </tr>
+  </tfoot>
+</table>
 
-    <label for="description">توضیحات:</label>
-    <textarea id="description" name="description" placeholder="توضیحات فاکتور..."></textarea>
+<button onclick="submitInvoice()">ثبت فاکتور</button>
 
-    <button type="submit">ثبت فاکتور</button>
-  </form>
+<script>
+  // تاریخ امروز
+  const today = new Date();
+  document.getElementById('date').textContent = today.toLocaleDateString('fa-IR');
 
-  <script>
-    function submitInvoice(event) {
-      event.preventDefault(); // جلوگیری از ریفرش صفحه
-      const customer = document.getElementById('customer').value;
-      const date = document.getElementById('date').value;
-      const amount = document.getElementById('amount').value;
-      const description = document.getElementById('description').value;
+  // به‌روزرسانی جمع هر ردیف و جمع کل
+  function updateRow(input) {
+    const row = input.parentElement.parentElement;
+    const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
+    const price = parseFloat(row.cells[3].querySelector('input').value) || 0;
+    const total = qty * price;
+    row.querySelector('.row-total').textContent = total.toLocaleString();
+    updateGrandTotal();
+  }
 
-      // نمایش داده‌ها (بعدا می‌توانی این را ذخیره یا ارسال به سرور بکنی)
-      alert(`فاکتور ثبت شد:\nنام مشتری: ${customer}\nتاریخ: ${date}\nمبلغ: ${amount}\nتوضیحات: ${description}`);
+  function updateGrandTotal() {
+    let sum = 0;
+    document.querySelectorAll('.row-total').forEach(td => {
+      sum += parseFloat(td.textContent.replace(/,/g,'')) || 0;
+    });
+    document.getElementById('grand-total').textContent = sum.toLocaleString();
+  }
 
-      // پاک کردن فرم بعد از ثبت
-      event.target.reset();
-    }
-  </script>
+  // ثبت فاکتور
+  function submitInvoice() {
+    const customer = document.getElementById('customer-name').value;
+    const total = document.getElementById('grand-total').textContent;
+    alert(`فاکتور ثبت شد!\nنام مشتری: ${customer}\nجمع کل: ${total}`);
+  }
+
+  // اضافه کردن ردیف جدید با کلید تب یا دکمه
+</script>
+
 </body>
 </html>
