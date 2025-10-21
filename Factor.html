@@ -102,67 +102,71 @@
     width: 60px;
     text-align: center;
   }
-
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="invoice-info">
-    <div>تاریخ: <span id="date"></span></div>
-    <div>شماره فاکتور: <span id="invoice-number">001</span></div>
+<div id="invoice-content">
+  <div class="header">
+    <div class="invoice-info">
+      <div>تاریخ: <span id="date"></span></div>
+      <div>شماره فاکتور: <span id="invoice-number">001</span></div>
+    </div>
+    <div class="logo">Zia Scarf</div>
   </div>
-  <div class="logo">Zia Scarf</div>
-</div>
 
-<div class="customer-info">
-  <div class="customer-left">
-    <label>تلفن:</label>
-    <div>0912-XXXXXXX</div>
-    <label>آدرس:</label>
-    <div>تهران، خیابان مثال</div>
+  <div class="customer-info">
+    <div class="customer-left">
+      <label>تلفن:</label>
+      <div>0912-XXXXXXX</div>
+      <label>آدرس:</label>
+      <div>تهران، خیابان مثال</div>
+    </div>
+    <div class="customer-right">
+      <label>نام مشتری:</label>
+      <input type="text" id="customer-name" placeholder="مثلاً: علی رضایی">
+    </div>
   </div>
-  <div class="customer-right">
-    <label>نام مشتری:</label>
-    <input type="text" id="customer-name" placeholder="مثلاً: علی رضایی">
-  </div>
-</div>
 
-<table id="invoice-table">
-  <thead>
-    <tr>
-      <th>کد کالا</th>
-      <th>نام کالا</th>
-      <th>تعداد</th>
-      <th>قیمت واحد</th>
-      <th>جمع</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><input type="text" placeholder="123"></td>
-      <td><input type="text" placeholder="کالا"></td>
-      <td><input type="number" value="1" min="1" onchange="updateRow(this)"></td>
-      <td><input type="number" value="0" min="0" onchange="updateRow(this)"></td>
-      <td class="row-total">0</td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr>
-      <td colspan="4">جمع کل</td>
-      <td id="grand-total">0</td>
-    </tr>
-  </tfoot>
-</table>
+  <table id="invoice-table">
+    <thead>
+      <tr>
+        <th>کد کالا</th>
+        <th>نام کالا</th>
+        <th>تعداد</th>
+        <th>قیمت واحد</th>
+        <th>جمع</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><input type="text" placeholder="123"></td>
+        <td><input type="text" placeholder="کالا"></td>
+        <td><input type="number" value="1" min="1" onchange="updateRow(this)"></td>
+        <td><input type="number" value="0" min="0" onchange="updateRow(this)"></td>
+        <td class="row-total">0</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4">جمع کل</td>
+        <td id="grand-total">0</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
 
 <button onclick="submitInvoice()">ثبت فاکتور</button>
+
+<!-- کتابخانه html2pdf.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <script>
   // تاریخ امروز
   const today = new Date();
   document.getElementById('date').textContent = today.toLocaleDateString('fa-IR');
 
-  // به‌روزرسانی جمع هر ردیف و جمع کل
+  // بروزرسانی جمع ردیف و جمع کل
   function updateRow(input) {
     const row = input.parentElement.parentElement;
     const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
@@ -180,14 +184,22 @@
     document.getElementById('grand-total').textContent = sum.toLocaleString();
   }
 
-  // ثبت فاکتور
+  // ثبت فاکتور و دانلود PDF
   function submitInvoice() {
     const customer = document.getElementById('customer-name').value;
     const total = document.getElementById('grand-total').textContent;
-    alert(`فاکتور ثبت شد!\nنام مشتری: ${customer}\nجمع کل: ${total}`);
-  }
 
-  // اضافه کردن ردیف جدید با کلید تب یا دکمه
+    alert(`فاکتور ثبت شد!\nنام مشتری: ${customer}\nجمع کل: ${total}`);
+
+    // دانلود PDF
+    const element = document.getElementById('invoice-content');
+    html2pdf(element, {
+      margin: 10,
+      filename: `Factor_${customer || 'Customer'}.pdf`,
+      html2canvas: { scale: 2 },
+      jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    });
+  }
 </script>
 
 </body>
