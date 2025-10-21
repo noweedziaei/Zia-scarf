@@ -2,133 +2,53 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>فاکتور فروش</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>کنترل پنل</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600&display=swap');
     body {
-      font-family: 'Vazirmatn', sans-serif;
-      direction: rtl;
-      background: #f7f8fa;
       margin: 0;
-      padding: 30px;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
-    .invoice {
-      background: #fff;
-      max-width: 700px;
-      margin: 0 auto;
+
+    .panel {
+      background-color: #111; /* کادر مشکی */
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-    .header {
-      background: linear-gradient(135deg, #0099ff, #00cc99);
-      color: #fff;
-      padding: 20px 30px;
-      text-align: center;
-    }
-    .header h1 {
-      margin: 0;
-      font-size: 26px;
-      letter-spacing: 1px;
-    }
-    .info {
-      padding: 25px 30px;
-      line-height: 1.8;
-      color: #333;
-    }
-    .info strong {
-      color: #000;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
-    }
-    th {
-      background: #f1f1f1;
-    }
-    .total {
-      text-align: left;
-      padding: 15px 30px;
-      font-size: 18px;
-      background: #fafafa;
-    }
-    .total strong {
-      color: #0099ff;
-    }
-    .footer {
-      text-align: center;
       padding: 20px;
-      color: #777;
-      font-size: 14px;
-      border-top: 1px solid #eee;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
     }
-    @media print {
-      body { background: none; padding: 0; }
-      .invoice { box-shadow: none; border: none; }
-      .footer { display: none; }
+
+    .panel button {
+      background-color: #fff; /* دکمه سفید */
+      color: #111;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.1s, background-color 0.2s;
+    }
+
+    .panel button:hover {
+      background-color: #eee;
+      transform: scale(1.03);
     }
   </style>
 </head>
 <body>
-  <div class="invoice">
-    <div class="header">
-      <h1>فاکتور فروش</h1>
-    </div>
-    <div class="info">
-      <p><strong>تاریخ:</strong> ۲۰ مهر ۱۴۰۳</p>
-      <p><strong>نام مشتری:</strong> نوید ضیایی</p>
-      <p><strong>شماره فاکتور:</strong> ۰۰۱۲۳</p>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th>ردیف</th>
-          <th>شرح کالا</th>
-          <th>تعداد</th>
-          <th>قیمت واحد (تومان)</th>
-          <th>جمع (تومان)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>۱</td>
-          <td>کتاب</td>
-          <td>۲</td>
-          <td>۱۲۰,۰۰۰</td>
-          <td>۲۴۰,۰۰۰</td>
-        </tr>
-        <tr>
-          <td>۲</td>
-          <td>خودکار</td>
-          <td>۳</td>
-          <td>۱۵,۰۰۰</td>
-          <td>۴۵,۰۰۰</td>
-        </tr>
-        <tr>
-          <td>۳</td>
-          <td>دفتر یادداشت</td>
-          <td>۱</td>
-          <td>۸۰,۰۰۰</td>
-          <td>۸۰,۰۰۰</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="total">
-      <p><strong>جمع کل:</strong> ۳۶۵,۰۰۰ تومان</p>
-      <p><strong>مالیات (۹٪):</strong> ۳۲,۸۵۰ تومان</p>
-      <p><strong>مبلغ نهایی:</strong> ۳۹۷,۸۵۰ تومان</p>
-    </div>
-    <div class="footer">
-      با تشکر از خرید شما 💚  
-      <br>تمامی حقوق محفوظ است © ۱۴۰۳
-    </div>
+  <div class="panel">
+    <button onclick="alert('ثبت فاکتور جدید')">ثبت فاکتور جدید</button>
+    <button onclick="alert('لیست مشتریان')">لیست مشتریان</button>
+    <button onclick="alert('چک‌ها')">چک‌ها</button>
   </div>
 </body>
 </html>
