@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ثبت فاکتور</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .invoice-form {
+      background-color: #111;
+      padding: 20px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 400px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .invoice-form label {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .invoice-form input,
+    .invoice-form textarea,
+    .invoice-form select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+    }
+
+    .invoice-form textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .invoice-form button {
+      background-color: #fff;
+      color: #111;
+      border: none;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.1s, background-color 0.2s;
+    }
+
+    .invoice-form button:hover {
+      background-color: #eee;
+      transform: scale(1.03);
+    }
+  </style>
+</head>
+<body>
+  <form class="invoice-form" onsubmit="submitInvoice(event)">
+    <h2 style="text-align:center;">ثبت فاکتور</h2>
+
+    <label for="customer">نام مشتری:</label>
+    <input type="text" id="customer" name="customer" placeholder="مثلاً: علی رضایی" required>
+
+    <label for="date">تاریخ:</label>
+    <input type="date" id="date" name="date" required>
+
+    <label for="amount">مبلغ:</label>
+    <input type="number" id="amount" name="amount" placeholder="مثلاً: 500000" required>
+
+    <label for="description">توضیحات:</label>
+    <textarea id="description" name="description" placeholder="توضیحات فاکتور..."></textarea>
+
+    <button type="submit">ثبت فاکتور</button>
+  </form>
+
+  <script>
+    function submitInvoice(event) {
+      event.preventDefault(); // جلوگیری از ریفرش صفحه
+      const customer = document.getElementById('customer').value;
+      const date = document.getElementById('date').value;
+      const amount = document.getElementById('amount').value;
+      const description = document.getElementById('description').value;
+
+      // نمایش داده‌ها (بعدا می‌توانی این را ذخیره یا ارسال به سرور بکنی)
+      alert(`فاکتور ثبت شد:\nنام مشتری: ${customer}\nتاریخ: ${date}\nمبلغ: ${amount}\nتوضیحات: ${description}`);
+
+      // پاک کردن فرم بعد از ثبت
+      event.target.reset();
+    }
+  </script>
+</body>
+</html>
