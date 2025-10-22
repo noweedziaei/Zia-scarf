@@ -3,54 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>کنترل پنل</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-
-    .panel {
-      background-color: #111; /* کادر مشکی */
-      border-radius: 12px;
-      padding: 20px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .panel button {
-      background-color: #fff; /* دکمه سفید */
-      color: #111;
-      border: none;
-      padding: 15px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: transform 0.1s, background-color 0.2s;
-    }
-
-    .panel button:hover {
-      background-color: #eee;
-      transform: scale(1.03);
-    }
-  </style>
+  <title>پنل مدیریت فاکتور</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="panel">
-    <button onclick="window.location.href='Factor.html'">ثبت فاکتور جدید</button>
-    <!-- لینک به factor.html -->
-    <button onclick="window.location.href='factor.html'">ثبت فاکتور جدید</button>
-    <button onclick="alert('لیست مشتریان')">لیست مشتریان</button>
-    <button onclick="alert('چک‌ها')">چک‌ها</button>
+  <div class="container">
+    <h1>🧾 پنل مدیریت فاکتور</h1>
+
+    <div class="buttons">
+      <button id="newInvoiceBtn">➕ ثبت فاکتور جدید</button>
+      <button id="viewCustomersBtn">👥 لیست مشتری‌ها</button>
+      <button id="viewReportsBtn">📊 گزارش‌ها</button>
+    </div>
+
+    <div id="invoiceForm" class="hidden">
+      <h2>ثبت فاکتور جدید</h2>
+      <form id="invoiceFormElement">
+        <label>شماره فاکتور:</label>
+        <input type="text" id="invoiceId" required>
+
+        <label>تاریخ:</label>
+        <input type="date" id="invoiceDate" required>
+
+        <label>نام مشتری:</label>
+        <input type="text" id="customerName" required>
+
+        <label>کالا:</label>
+        <input type="text" id="productName" required>
+
+        <label>تعداد:</label>
+        <input type="number" id="quantity" required>
+
+        <label>قیمت واحد:</label>
+        <input type="number" id="unitPrice" required>
+
+        <h3>جمع کل: <span id="totalPrice">0</span> تومان</h3>
+
+        <button type="submit">ثبت فاکتور ✅</button>
+      </form>
+    </div>
   </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
