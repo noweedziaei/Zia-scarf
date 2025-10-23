@@ -9,147 +9,146 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-  body {
-    font-family: "Tahoma", sans-serif;
-    background-color: #fff;
-    color: #222;
-    margin: 0;
-    padding: 20px;
-    direction: rtl;
-  }
+body {
+  font-family: "Tahoma", sans-serif;
+  background-color: #fff;
+  color: #222;
+  margin: 0;
+  padding: 20px;
+  direction: rtl;
+}
 
-  #invoice {
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background: #fff;
-  }
+#invoice {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #fff;
+}
 
-  /* Header */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-  }
+.header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
 
-  .brand {
-    text-align: right;
-  }
+.brand {
+  text-align: right;
+}
 
-  .brand .en-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 26px;
-    color: #000;
-  }
+.brand .en-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  color: #000;
+}
 
-  .brand .fa-name {
-    font-family: "B Nazanin", "Tahoma";
-    font-size: 18px;
-  }
+.brand .fa-name {
+  font-family: "B Nazanin", "Tahoma";
+  font-size: 18px;
+}
 
-  .brand .address {
-    font-size: 13px;
-    color: #555;
-  }
+.brand .address {
+  font-size: 13px;
+  color: #555;
+}
 
-  .invoice-info {
-    text-align: left;
-    font-size: 14px;
-    line-height: 1.7;
-  }
+.invoice-info {
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.7;
+}
 
-  .invoice-info input {
-    border: none;
-    border-bottom: 1px solid #ccc;
-    padding: 3px;
-    width: 180px;
-    font-size: 13px;
-  }
+.invoice-info input, .invoice-info select {
+  border: none;
+  border-bottom: 1px solid #ccc;
+  padding: 3px;
+  width: 180px;
+  font-size: 13px;
+}
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
 
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-    font-size: 13px;
-  }
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  font-size: 13px;
+}
 
-  th {
-    background-color: #f8f8f8;
-  }
+th {
+  background-color: #f8f8f8;
+}
 
-  td input {
-    border: none;
-    text-align: center;
-    width: 100%;
-    padding: 5px;
-  }
+td input, td select {
+  border: none;
+  text-align: center;
+  width: 100%;
+  padding: 5px;
+}
 
-  th:nth-child(1), td:nth-child(1) { width: 12%; }
-  th:nth-child(2), td:nth-child(2) { width: 38%; }
-  th:nth-child(3), td:nth-child(3) { width: 10%; }
-  th:nth-child(4), td:nth-child(4) { width: 18%; }
-  th:nth-child(5), td:nth-child(5) { width: 22%; }
+th:nth-child(1), td:nth-child(1) { width: 12%; }
+th:nth-child(2), td:nth-child(2) { width: 38%; }
+th:nth-child(3), td:nth-child(3) { width: 10%; }
+th:nth-child(4), td:nth-child(4) { width: 18%; }
+th:nth-child(5), td:nth-child(5) { width: 22%; }
 
-  .footer {
-    margin-top: 20px;
-  }
+.footer {
+  margin-top: 20px;
+}
 
-  .footer textarea {
-    width: 100%;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 8px;
-    font-size: 13px;
-    resize: vertical;
-  }
+.footer textarea {
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 13px;
+  resize: vertical;
+}
 
-  .total {
-    text-align: left;
-    font-weight: bold;
-    margin-top: 10px;
-    font-size: 14px;
-  }
+.total {
+  text-align: left;
+  font-weight: bold;
+  margin-top: 10px;
+  font-size: 14px;
+}
 
-  .buttons {
-    margin-top: 20px;
-    text-align: center;
-  }
+.buttons {
+  margin-top: 20px;
+  text-align: center;
+}
 
-  .btn {
-    background-color: #222;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 20px;
-    font-size: 15px;
-    cursor: pointer;
-    margin: 5px;
-  }
+.btn {
+  background-color: #222;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 15px;
+  cursor: pointer;
+  margin: 5px;
+}
 
-  .btn:hover {
-    background-color: #444;
-  }
+.btn:hover {
+  background-color: #444;
+}
 
-  .add-row {
-    background-color: #007bff;
-  }
+.add-row {
+  background-color: #007bff;
+}
 
-  .add-row:hover {
-    background-color: #0069d9;
-  }
+.add-row:hover {
+  background-color: #0069d9;
+}
 
-  @media (max-width: 600px) {
-    .invoice-info input { width: 130px; }
-  }
+@media (max-width: 600px) {
+  .invoice-info input, .invoice-info select { width: 130px; }
+}
 </style>
 </head>
 <body>
@@ -165,11 +164,15 @@
     <div class="invoice-info">
       شماره فاکتور: <input type="text" id="invoiceNumber" readonly><br>
       نام خریدار:
-      <input list="buyers" id="buyerName" placeholder="مثلاً: فاطمه احمدی">
-      <datalist id="buyers">
-        <option value="مرادی"><option value="محمدی"><option value="احمدی"><option value="کریمی"><option value="جعفری">
-      </datalist><br>
-      مشخصات: <input type="text" id="buyerDetails" placeholder="آدرس و شماره تلفن">
+      <select id="buyerName" onchange="fillBuyerInfo(this)">
+        <option value="">انتخاب مشتری...</option>
+        <option value="1">مرادی</option>
+        <option value="2">محمدی</option>
+        <option value="3">احمدی</option>
+        <option value="4">کریمی</option>
+      </select><br>
+      مشخصات: <input type="text" id="buyerDetails" placeholder="آدرس" readonly><br>
+      شماره تلفن: <input type="text" id="buyerPhone" placeholder="تلفن" readonly>
     </div>
   </div>
 
@@ -185,16 +188,19 @@
     </thead>
     <tbody>
       <tr>
-        <td><input type="text" placeholder="123"></td>
-        <td><input list="products" placeholder="نام کالا">
-          <datalist id="products">
-            <option value="روسری نخی طرح گل"><option value="روسری حریر ساده">
-            <option value="روسری ابریشمی کلاسیک"><option value="شال نخی تابستانی">
-            <option value="روسری نخی چهارخانه">
-          </datalist>
+        <td><input type="text" readonly></td>
+        <td>
+          <select onchange="fillProductInfo(this)">
+            <option value="">انتخاب کالا...</option>
+            <option value="1">روسری نخی طرح گل</option>
+            <option value="2">روسری حریر ساده</option>
+            <option value="3">روسری ابریشمی کلاسیک</option>
+            <option value="4">شال نخی تابستانی</option>
+            <option value="5">روسری نخی چهارخانه</option>
+          </select>
         </td>
         <td><input type="number" value="1" min="1" onchange="updateRow(this)"></td>
-        <td><input type="number" value="0" min="0" onchange="updateRow(this)"></td>
+        <td><input type="number" value="0" min="0" readonly></td>
         <td class="row-total">0</td>
       </tr>
     </tbody>
@@ -213,62 +219,95 @@
 </div>
 
 <script>
-  let invoiceNumber = localStorage.getItem("invoiceNumber") || 1;
-  document.getElementById("invoiceNumber").value = invoiceNumber.toString().padStart(2, "0");
+let invoiceNumber = localStorage.getItem("invoiceNumber") || 1;
+document.getElementById("invoiceNumber").value = invoiceNumber.toString().padStart(2,"0");
 
-  function updateRow(input) {
-    const row = input.closest('tr');
-    const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
-    const price = parseFloat(row.cells[3].querySelector('input').value) || 0;
-    const total = qty * price;
-    row.querySelector('.row-total').textContent = total.toLocaleString();
-    updateGrandTotal();
+// لیست مشتری‌ها
+const buyers = {
+  "1": { name: "حسین برومند", details: "مشهد بازار امام رضا (ع)", phone: "09120000001" },
+  "2": { name: "اقای امینیان", details: "مشهد، کوچه سرشور پلاک ۲۰", phone: "09120000002" },
+  "3": { name: "اقای ", details: "مشهد، خیابان طبرسی، پلاک ۳۰", phone: "09120000003" },
+  "4": { name: "کریمی", details: "مشهد، خیابان نمونه، پلاک ۴۰", phone: "09120000004" }
+};
+
+function fillBuyerInfo(select){
+  const id = select.value;
+  if(buyers[id]){
+    document.getElementById('buyerDetails').value = buyers[id].details;
+    document.getElementById('buyerPhone').value = buyers[id].phone;
+  } else {
+    document.getElementById('buyerDetails').value = "";
+    document.getElementById('buyerPhone').value = "";
   }
+}
 
-  function updateGrandTotal() {
-    let sum = 0;
-    document.querySelectorAll('.row-total').forEach(td => {
-      sum += parseFloat(td.textContent.replace(/,/g, '')) || 0;
-    });
-    document.getElementById('grandTotal').textContent = sum.toLocaleString();
+// لیست محصولات
+const products = {
+  "1": { code: "R101", price: 250000 },
+  "2": { code: "R102", price: 320000 },
+  "3": { code: "R103", price: 420000 },
+  "4": { code: "S201", price: 280000 },
+  "5": { code: "R104", price: 300000 },
+};
+
+function fillProductInfo(select) {
+  const row = select.closest('tr');
+  const id = select.value;
+  if(products[id]){
+    row.cells[0].querySelector('input').value = products[id].code;
+    row.cells[3].querySelector('input').value = products[id].price;
+    updateRow(select);
   }
+}
 
-  function addRow() {
-    const tbody = document.querySelector('#invoiceTable tbody');
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = `
-      <td><input type="text" placeholder="کد"></td>
-      <td><input list="products" placeholder="نام کالا"></td>
-      <td><input type="number" value="1" min="1" onchange="updateRow(this)"></td>
-      <td><input type="number" value="0" min="0" onchange="updateRow(this)"></td>
-      <td class="row-total">0</td>
-    `;
-    tbody.appendChild(newRow);
-  }
+function updateRow(input){
+  const row = input.closest('tr');
+  const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
+  const price = parseFloat(row.cells[3].querySelector('input').value) || 0;
+  const total = qty * price;
+  row.querySelector('.row-total').textContent = total.toLocaleString();
+  updateGrandTotal();
+}
 
-  function saveInvoice() {
-    updateGrandTotal();
+function updateGrandTotal(){
+  let sum = 0;
+  document.querySelectorAll('.row-total').forEach(td=>{
+    sum += parseFloat(td.textContent.replace(/,/g,'')) || 0;
+  });
+  document.getElementById('grandTotal').textContent = sum.toLocaleString();
+}
 
-    const invoice = document.getElementById('invoice');
-    const buttons = document.querySelector('.buttons');
-    buttons.style.display = 'none'; // دکمه‌ها در PDF نیان
+function addRow(){
+  const tbody = document.querySelector('#invoiceTable tbody');
+  const newRow = document.createElement('tr');
+  newRow.innerHTML = `
+    <td><input type="text" readonly></td>
+    <td>
+      <select onchange="fillProductInfo(this)">
+        <option value="">انتخاب کالا...</option>
+        <option value="1">روسری نخی طرح گل</option>
+        <option value="2">روسری حریر ساده</option>
+        <option value="3">روسری ابریشمی کلاسیک</option>
+        <option value="4">شال نخی تابستانی</option>
+        <option value="5">روسری نخی چهارخانه</option>
+      </select>
+    </td>
+    <td><input type="number" value="1" min="1" onchange="updateRow(this)"></td>
+    <td><input type="number" value="0" min="0" readonly></td>
+    <td class="row-total">0</td>
+  `;
+  tbody.appendChild(newRow);
+}
 
-    const buyer = document.getElementById('buyerName').value || 'بدون‌نام';
-    const fileName = `Factor_${document.getElementById('invoiceNumber').value}_${buyer}.pdf`;
+function saveInvoice(){
+  updateGrandTotal();
+  const invoice = document.getElementById('invoice');
+  const buttons = document.querySelector('.buttons');
+  buttons.style.display = 'none'; // دکمه‌ها در PDF نیان
 
-    html2pdf().from(invoice).set({
-      margin: [10, 5, 10, 5], // کاهش حاشیه چپ/راست
-      filename: fileName,
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
-    }).save().then(() => {
-      buttons.style.display = 'block'; // بعد از ساخت PDF دکمه‌ها برگردن
-      invoiceNumber++;
-      localStorage.setItem("invoiceNumber", invoiceNumber);
-      document.getElementById("invoiceNumber").value = invoiceNumber.toString().padStart(2, "0");
-    });
-  }
-</script>
+  const buyer = document.getElementById('buyerName').selectedOptions[0].text || 'بدون‌نام';
+  const fileName = `Factor_${document.getElementById('invoiceNumber').value}_${buyer}.pdf`;
 
-</body>
-</html>
+  html2pdf().from(invoice).set({
+    margin: [10,5,10,5],
+    filename: file
