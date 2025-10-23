@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>فاکتور Zia Scarf</title>
 
-<!-- فونت فارسی و انگلیسی -->
+<!-- فونت انگلیسی -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <style>
   body {
     font-family: "Tahoma", sans-serif;
@@ -17,7 +19,7 @@
     direction: rtl;
   }
 
-  /* ===== Header ===== */
+  /* Header */
   .header {
     display: flex;
     justify-content: space-between;
@@ -26,7 +28,6 @@
     margin-bottom: 25px;
   }
 
-  /* لوگو و اطلاعات فروشنده */
   .brand {
     text-align: right;
   }
@@ -48,7 +49,6 @@
     color: #555;
   }
 
-  /* بخش اطلاعات فاکتور */
   .invoice-info {
     text-align: left;
     font-size: 14px;
@@ -63,7 +63,6 @@
     font-size: 13px;
   }
 
-  /* ===== جدول فاکتور ===== */
   table {
     width: 100%;
     border-collapse: collapse;
@@ -90,14 +89,12 @@
     font-size: 13px;
   }
 
-  /* ستون‌های کوچک و بزرگ */
-  th:nth-child(1), td:nth-child(1) { width: 12%; } /* کد کالا */
-  th:nth-child(2), td:nth-child(2) { width: 38%; } /* نام کالا */
-  th:nth-child(3), td:nth-child(3) { width: 12%; } /* تعداد */
-  th:nth-child(4), td:nth-child(4) { width: 18%; } /* قیمت واحد */
-  th:nth-child(5), td:nth-child(5) { width: 20%; } /* جمع */
+  th:nth-child(1), td:nth-child(1) { width: 12%; }
+  th:nth-child(2), td:nth-child(2) { width: 38%; }
+  th:nth-child(3), td:nth-child(3) { width: 12%; }
+  th:nth-child(4), td:nth-child(4) { width: 18%; }
+  th:nth-child(5), td:nth-child(5) { width: 20%; }
 
-  /* ===== بخش پایین فاکتور ===== */
   .footer {
     margin-top: 15px;
   }
@@ -117,7 +114,6 @@
     margin-top: 10px;
   }
 
-  /* ===== دکمه‌ها ===== */
   .btn {
     width: 100%;
     background-color: #222;
@@ -151,7 +147,6 @@
 
 <div id="invoice">
 
-  <!-- Header -->
   <div class="header">
     <div class="brand">
       <div class="en-name">Zia Scarf</div>
@@ -160,13 +155,21 @@
     </div>
 
     <div class="invoice-info">
-      شماره فاکتور: <input type="text" id="invoiceNumber" value="01"><br>
-      نام خریدار: <input type="text" id="buyerName" placeholder="مثلاً: فاطمه احمدی"><br>
+      شماره فاکتور: <input type="text" id="invoiceNumber" readonly><br>
+     نام خریدار:
+<input list="buyers" id="buyerName" placeholder="مثلاً: فاطمه احمدی">
+<datalist id="buyers">
+  <option value="حسن برومند">
+  <option value="اکبر برومند">
+  <option value="مصطفی رحمانی">
+  <option value="سعید بخشی">
+  <option value="جعفری">
+</datalist>
+<br> <br>
       مشخصات: <input type="text" id="buyerDetails" placeholder="آدرس و شماره تلفن">
     </div>
   </div>
 
-  <!-- Table -->
   <table id="invoiceTable">
     <thead>
       <tr>
@@ -190,19 +193,23 @@
 
   <button class="btn add-row" onclick="addRow()">➕ افزودن ردیف</button>
 
-  <!-- Footer -->
   <div class="footer">
     <label for="note">توضیحات:</label>
     <textarea id="note" rows="3" placeholder="توضیحات اضافی..."></textarea>
     <div class="total">جمع کل: <span id="grandTotal">0</span> تومان</div>
   </div>
 
-  <button class="btn" onclick="saveInvoice()">ثبت فاکتور</button>
+  <button class="btn" onclick="saveInvoice()">ثبت و دریافت PDF</button>
 
 </div>
 
 <script>
-  // محاسبه جمع هر ردیف
+  // شماره فاکتور از حافظه مرورگر
+  let invoiceNumber = localStorage.getItem("invoiceNumber");
+  if (!invoiceNumber) invoiceNumber = 1;
+  document.getElementById("invoiceNumber").value = invoiceNumber.toString().padStart(2, "0");
+
+  // محاسبه جمع ردیف
   function updateRow(input) {
     const row = input.closest('tr');
     const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
@@ -235,10 +242,25 @@
     tbody.appendChild(newRow);
   }
 
-  // ثبت فاکتور (در مرحله بعد PDF و ذخیره اضافه میشه)
+  // ساخت PDF و افزایش شماره فاکتور
   function saveInvoice() {
     updateGrandTotal();
-    alert('فاکتور با موفقیت ثبت شد ✅ (در مرحله بعد ذخیره و PDF اضافه می‌شود)');
+
+    const element = document.getElementById('invoice');
+    const buyer = document.getElementById('buyerName').value || 'بدون‌نام';
+    const fileName = `Factor_${document.getElementById('invoiceNumber').value}_${buyer}.pdf`;
+
+    html2pdf(element, {
+      margin: 10,
+      filename: fileName,
+      html2canvas: { scale: 2 },
+      jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    });
+
+    // افزایش شماره فاکتور و ذخیره در مرورگر
+    invoiceNumber++;
+    localStorage.setItem("invoiceNumber", invoiceNumber);
+    document.getElementById("invoiceNumber").value = invoiceNumber.toString().padStart(2, "0");
   }
 </script>
 
