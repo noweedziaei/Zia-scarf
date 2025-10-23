@@ -4,38 +4,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>فاکتور Zia Scarf</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 <style>
-body { font-family: Tahoma,sans-serif; margin:0; padding:20px; direction: rtl; background:#fff; color:#222; }
-#invoice { max-width:800px; margin:auto; padding:20px; border:1px solid #ddd; border-radius:10px; background:#fff; }
-.header { display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:20px; }
+body { font-family: Tahoma,sans-serif; margin:0; padding:10px; direction: rtl; background:#fff; color:#222; }
+#invoice { max-width:800px; margin:auto; padding:10px; border:1px solid #ddd; border-radius:10px; background:#fff; }
+.header { display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:10px; }
 .brand { text-align:right; }
-.brand .en-name { font-family:'Playfair Display', serif; font-size:26px; }
-.brand .fa-name { font-family:"B Nazanin","Tahoma"; font-size:18px; }
-.brand .address { font-size:13px; color:#555; }
-.invoice-info { text-align:left; font-size:14px; line-height:1.7; }
-.invoice-info input, .invoice-info select { border:none; border-bottom:1px solid #ccc; padding:3px; width:180px; font-size:13px; }
-table { width:100%; border-collapse:collapse; margin-top:10px; }
-th, td { border:1px solid #ddd; padding:8px; text-align:center; font-size:13px; }
+.brand .en-name { font-family:'Playfair Display', serif; font-size:24px; }
+.brand .fa-name { font-size:16px; }
+.brand .address { font-size:12px; color:#555; }
+.invoice-info { text-align:left; font-size:13px; line-height:1.5; }
+.invoice-info input, .invoice-info select { border:none; border-bottom:1px solid #ccc; padding:3px; width:150px; font-size:12px; }
+table { width:100%; border-collapse:collapse; margin-top:10px; table-layout: fixed; }
+th, td { border:1px solid #ddd; padding:6px; text-align:center; font-size:12px; }
 th { background:#f8f8f8; }
-td input, td select { border:none; text-align:center; width:100%; padding:5px; }
+td input, td select { border:none; text-align:center; width:100%; padding:3px; font-size:12px; }
 th:nth-child(1), td:nth-child(1){width:12%;}
 th:nth-child(2), td:nth-child(2){width:38%;}
 th:nth-child(3), td:nth-child(3){width:10%;}
-th:nth-child(4), td:nth-child(4){width:18%;}
-th:nth-child(5), td:nth-child(5){width:22%;}
-.footer { margin-top:20px; }
-.footer textarea { width:100%; border:1px solid #ddd; border-radius:5px; padding:8px; font-size:13px; resize:vertical; }
-.total { text-align:left; font-weight:bold; margin-top:10px; font-size:14px; }
-.buttons { margin-top:20px; text-align:center; }
-.btn { background:#222; color:#fff; border:none; border-radius:8px; padding:12px 20px; font-size:15px; cursor:pointer; margin:5px; }
+th:nth-child(4), td:nth-child(4){width:20%;}
+th:nth-child(5), td:nth-child(5){width:20%;}
+.footer { margin-top:10px; }
+.footer textarea { width:100%; border:1px solid #ddd; border-radius:5px; padding:6px; font-size:12px; resize:vertical; }
+.total { text-align:left; font-weight:bold; margin-top:5px; font-size:13px; }
+.buttons { margin-top:10px; text-align:center; }
+.btn { background:#222; color:#fff; border:none; border-radius:6px; padding:10px 15px; font-size:13px; cursor:pointer; margin:3px; }
 .btn:hover { background:#444; }
 .add-row { background:#007bff; }
 .add-row:hover { background:#0069d9; }
-@media (max-width:600px){ .invoice-info input,.invoice-info select{width:130px;} }
+@media (max-width:500px){ .invoice-info input,.invoice-info select{width:120px; font-size:11px;} table, th, td { font-size:11px; } }
 </style>
 </head>
 <body>
@@ -81,6 +79,7 @@ th:nth-child(5), td:nth-child(5){width:22%;}
 </div>
 
 <script>
+// شماره فاکتور
 const invoiceNumberInput = document.getElementById("invoiceNumber");
 let invoiceNumber = localStorage.getItem("invoiceNumber") || 1;
 invoiceNumberInput.value = invoiceNumber.toString().padStart(2,"0");
@@ -126,18 +125,12 @@ function createRow(){
   const tr = document.createElement("tr");
 
   const tdCode = document.createElement("td");
-  const codeInput = document.createElement("input"); codeInput.readOnly=true;
-  tdCode.appendChild(codeInput);
+  const codeInput = document.createElement("input"); codeInput.readOnly=true; tdCode.appendChild(codeInput);
 
   const tdName = document.createElement("td");
   const nameSelect = document.createElement("select");
-  const defaultOption = document.createElement("option"); defaultOption.value=""; defaultOption.textContent="انتخاب کالا...";
-  nameSelect.appendChild(defaultOption);
-  for(const id in products){
-    const opt=document.createElement("option");
-    opt.value=id; opt.textContent=products[id].name;
-    nameSelect.appendChild(opt);
-  }
+  const defaultOption = document.createElement("option"); defaultOption.value=""; defaultOption.textContent="انتخاب کالا..."; nameSelect.appendChild(defaultOption);
+  for(const id in products){ const opt=document.createElement("option"); opt.value=id; opt.textContent=products[id].name; nameSelect.appendChild(opt);}
   tdName.appendChild(nameSelect);
 
   const tdQty=document.createElement("td"); const qtyInput=document.createElement("input"); qtyInput.type="number"; qtyInput.value=1; qtyInput.min=1; tdQty.appendChild(qtyInput);
@@ -174,9 +167,7 @@ function updateGrandTotal(){
 }
 
 // افزودن ردیف
-document.querySelector(".add-row").addEventListener("click", ()=>{
-  tbody.appendChild(createRow());
-});
+document.querySelector(".add-row").addEventListener("click", ()=>{ tbody.appendChild(createRow()); });
 
 // شروع با یک ردیف
 tbody.appendChild(createRow());
@@ -184,5 +175,15 @@ tbody.appendChild(createRow());
 // ذخیره PDF
 document.getElementById("saveBtn").addEventListener("click", ()=>{
   updateGrandTotal();
-  const buttonsDiv=document.querySelector(".buttons");
-  buttonsDiv
+  const buttonsDiv = document.querySelector(".buttons");
+  buttonsDiv.style.display="none"; // دکمه‌ها در PDF نادیده گرفته شوند
+  html2pdf().from(document.getElementById("invoice")).save("Invoice-"+invoiceNumberInput.value+".pdf").then(()=>{
+    buttonsDiv.style.display="block";
+    invoiceNumber++;
+    localStorage.setItem("invoiceNumber", invoiceNumber);
+    invoiceNumberInput.value = invoiceNumber.toString().padStart(2,"0");
+  });
+});
+</script>
+</body>
+</html>
