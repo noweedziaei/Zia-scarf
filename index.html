@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>فاکتور Zia Scarf</title>
 
-<!-- فونت انگلیسی -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
@@ -19,13 +18,21 @@
     direction: rtl;
   }
 
+  #invoice {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+  }
+
   /* Header */
   .header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
     flex-wrap: wrap;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
   }
 
   .brand {
@@ -41,7 +48,6 @@
   .brand .fa-name {
     font-family: "B Nazanin", "Tahoma";
     font-size: 18px;
-    margin-top: 3px;
   }
 
   .brand .address {
@@ -78,7 +84,6 @@
 
   th {
     background-color: #f8f8f8;
-    font-weight: bold;
   }
 
   td input {
@@ -86,17 +91,16 @@
     text-align: center;
     width: 100%;
     padding: 5px;
-    font-size: 13px;
   }
 
   th:nth-child(1), td:nth-child(1) { width: 12%; }
   th:nth-child(2), td:nth-child(2) { width: 38%; }
-  th:nth-child(3), td:nth-child(3) { width: 12%; }
+  th:nth-child(3), td:nth-child(3) { width: 10%; }
   th:nth-child(4), td:nth-child(4) { width: 18%; }
-  th:nth-child(5), td:nth-child(5) { width: 20%; }
+  th:nth-child(5), td:nth-child(5) { width: 22%; }
 
   .footer {
-    margin-top: 15px;
+    margin-top: 20px;
   }
 
   .footer textarea {
@@ -112,18 +116,23 @@
     text-align: left;
     font-weight: bold;
     margin-top: 10px;
+    font-size: 14px;
+  }
+
+  .buttons {
+    margin-top: 20px;
+    text-align: center;
   }
 
   .btn {
-    width: 100%;
     background-color: #222;
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 12px;
+    padding: 12px 20px;
     font-size: 15px;
-    margin-top: 15px;
     cursor: pointer;
+    margin: 5px;
   }
 
   .btn:hover {
@@ -146,7 +155,6 @@
 <body>
 
 <div id="invoice">
-
   <div class="header">
     <div class="brand">
       <div class="en-name">Zia Scarf</div>
@@ -156,16 +164,11 @@
 
     <div class="invoice-info">
       شماره فاکتور: <input type="text" id="invoiceNumber" readonly><br>
-     نام خریدار:
-<input list="buyers" id="buyerName" placeholder="مثلاً: فاطمه احمدی">
-<datalist id="buyers">
-  <option value="حسن برومند">
-  <option value="اکبر برومند">
-  <option value="مصطفی رحمانی">
-  <option value="سعید بخشی">
-  <option value="جعفری">
-</datalist>
-<br> <br>
+      نام خریدار:
+      <input list="buyers" id="buyerName" placeholder="مثلاً: فاطمه احمدی">
+      <datalist id="buyers">
+        <option value="مرادی"><option value="محمدی"><option value="احمدی"><option value="کریمی"><option value="جعفری">
+      </datalist><br>
       مشخصات: <input type="text" id="buyerDetails" placeholder="آدرس و شماره تلفن">
     </div>
   </div>
@@ -183,7 +186,13 @@
     <tbody>
       <tr>
         <td><input type="text" placeholder="123"></td>
-        <td><input type="text" placeholder="نام کالا"></td>
+        <td><input list="products" placeholder="نام کالا">
+          <datalist id="products">
+            <option value="روسری نخی طرح گل"><option value="روسری حریر ساده">
+            <option value="روسری ابریشمی کلاسیک"><option value="شال نخی تابستانی">
+            <option value="روسری نخی چهارخانه">
+          </datalist>
+        </td>
         <td><input type="number" value="1" min="1" onchange="updateRow(this)"></td>
         <td><input type="number" value="0" min="0" onchange="updateRow(this)"></td>
         <td class="row-total">0</td>
@@ -191,25 +200,22 @@
     </tbody>
   </table>
 
-  <button class="btn add-row" onclick="addRow()">➕ افزودن ردیف</button>
-
   <div class="footer">
     <label for="note">توضیحات:</label>
     <textarea id="note" rows="3" placeholder="توضیحات اضافی..."></textarea>
     <div class="total">جمع کل: <span id="grandTotal">0</span> تومان</div>
   </div>
+</div>
 
+<div class="buttons">
+  <button class="btn add-row" onclick="addRow()">➕ افزودن ردیف</button>
   <button class="btn" onclick="saveInvoice()">ثبت و دریافت PDF</button>
-
 </div>
 
 <script>
-  // شماره فاکتور از حافظه مرورگر
-  let invoiceNumber = localStorage.getItem("invoiceNumber");
-  if (!invoiceNumber) invoiceNumber = 1;
+  let invoiceNumber = localStorage.getItem("invoiceNumber") || 1;
   document.getElementById("invoiceNumber").value = invoiceNumber.toString().padStart(2, "0");
 
-  // محاسبه جمع ردیف
   function updateRow(input) {
     const row = input.closest('tr');
     const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
@@ -219,7 +225,6 @@
     updateGrandTotal();
   }
 
-  // جمع کل فاکتور
   function updateGrandTotal() {
     let sum = 0;
     document.querySelectorAll('.row-total').forEach(td => {
@@ -228,13 +233,12 @@
     document.getElementById('grandTotal').textContent = sum.toLocaleString();
   }
 
-  // افزودن ردیف جدید
   function addRow() {
     const tbody = document.querySelector('#invoiceTable tbody');
     const newRow = document.createElement('tr');
     newRow.innerHTML = `
       <td><input type="text" placeholder="کد"></td>
-      <td><input type="text" placeholder="نام کالا"></td>
+      <td><input list="products" placeholder="نام کالا"></td>
       <td><input type="number" value="1" min="1" onchange="updateRow(this)"></td>
       <td><input type="number" value="0" min="0" onchange="updateRow(this)"></td>
       <td class="row-total">0</td>
@@ -242,25 +246,27 @@
     tbody.appendChild(newRow);
   }
 
-  // ساخت PDF و افزایش شماره فاکتور
   function saveInvoice() {
     updateGrandTotal();
 
-    const element = document.getElementById('invoice');
+    const invoice = document.getElementById('invoice');
+    const buttons = document.querySelector('.buttons');
+    buttons.style.display = 'none'; // دکمه‌ها در PDF نیان
+
     const buyer = document.getElementById('buyerName').value || 'بدون‌نام';
     const fileName = `Factor_${document.getElementById('invoiceNumber').value}_${buyer}.pdf`;
 
-    html2pdf(element, {
-      margin: 10,
+    html2pdf().from(invoice).set({
+      margin: [10, 5, 10, 5], // کاهش حاشیه چپ/راست
       filename: fileName,
-      html2canvas: { scale: 2 },
+      html2canvas: { scale: 2, useCORS: true },
       jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    }).save().then(() => {
+      buttons.style.display = 'block'; // بعد از ساخت PDF دکمه‌ها برگردن
+      invoiceNumber++;
+      localStorage.setItem("invoiceNumber", invoiceNumber);
+      document.getElementById("invoiceNumber").value = invoiceNumber.toString().padStart(2, "0");
     });
-
-    // افزایش شماره فاکتور و ذخیره در مرورگر
-    invoiceNumber++;
-    localStorage.setItem("invoiceNumber", invoiceNumber);
-    document.getElementById("invoiceNumber").value = invoiceNumber.toString().padStart(2, "0");
   }
 </script>
 
