@@ -164,15 +164,9 @@ th:nth-child(5), td:nth-child(5) { width: 22%; }
     <div class="invoice-info">
       شماره فاکتور: <input type="text" id="invoiceNumber" readonly><br>
       نام خریدار:
-      <select id="buyerName" onchange="fillBuyerInfo(this)">
-        <option value="">انتخاب مشتری...</option>
-        <option value="1">مرادی</option>
-        <option value="2">محمدی</option>
-        <option value="3">احمدی</option>
-        <option value="4">کریمی</option>
-      </select><br>
-      مشخصات: <input type="text" id="buyerDetails" placeholder="آدرس" readonly><br>
-      شماره تلفن: <input type="text" id="buyerPhone" placeholder="تلفن" readonly>
+      <select id="buyerName"></select><br>
+      مشخصات: <input type="text" id="buyerDetails" readonly><br>
+      شماره تلفن: <input type="text" id="buyerPhone" readonly>
     </div>
   </div>
 
@@ -186,24 +180,7 @@ th:nth-child(5), td:nth-child(5) { width: 22%; }
         <th>جمع</th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td><input type="text" readonly></td>
-        <td>
-          <select onchange="fillProductInfo(this)">
-            <option value="">انتخاب کالا...</option>
-            <option value="1">روسری نخی طرح گل</option>
-            <option value="2">روسری حریر ساده</option>
-            <option value="3">روسری ابریشمی کلاسیک</option>
-            <option value="4">شال نخی تابستانی</option>
-            <option value="5">روسری نخی چهارخانه</option>
-          </select>
-        </td>
-        <td><input type="number" value="1" min="1" onchange="updateRow(this)"></td>
-        <td><input type="number" value="0" min="0" readonly></td>
-        <td class="row-total">0</td>
-      </tr>
-    </tbody>
+    <tbody></tbody>
   </table>
 
   <div class="footer">
@@ -214,24 +191,42 @@ th:nth-child(5), td:nth-child(5) { width: 22%; }
 </div>
 
 <div class="buttons">
-  <button class="btn add-row" onclick="addRow()">➕ افزودن ردیف</button>
-  <button class="btn" onclick="saveInvoice()">ثبت و دریافت PDF</button>
+  <button class="btn add-row">➕ افزودن ردیف</button>
+  <button class="btn" id="saveBtn">ثبت و دریافت PDF</button>
 </div>
 
 <script>
+const invoiceNumberInput = document.getElementById("invoiceNumber");
 let invoiceNumber = localStorage.getItem("invoiceNumber") || 1;
-document.getElementById("invoiceNumber").value = invoiceNumber.toString().padStart(2,"0");
+invoiceNumberInput.value = invoiceNumber.toString().padStart(2,"0");
 
 // مشتری‌ها
 const buyers = {
-  "1": { name: "مرادی", details: "مشهد، خیابان فلان، پلاک ۱۰", phone: "09120000001" },
-  "2": { name: "محمدی", details: "مشهد، خیابان بهمان، پلاک ۲۰", phone: "09120000002" },
-  "3": { name: "احمدی", details: "مشهد، خیابان دیگر، پلاک ۳۰", phone: "09120000003" },
-  "4": { name: "کریمی", details: "مشهد، خیابان نمونه، پلاک ۴۰", phone: "09120000004" }
+  "1": { name: "حسن برومند", details: "مشهد، بازار امام رضا (ع)", phone: "091572727" },
+  "2": { name: "اکبر برومند", details: "مشهد، بازار امام رضا (ع)", phone: "091572727" },
+  "3": { name: "حمیدی", details: "مشهد، خیابان برسی", phone: "091572727" }
 };
 
-function fillBuyerInfo(select){
-  const id = select.value;
+// محصولات
+const products = {
+  "1": { code: "R101", price: 250000, name: "روسری نخی طرح گل" },
+  "2": { code: "R102", price: 320000, name: "روسری حریر ساده" },
+  "3": { code: "R103", price: 420000, name: "روسری ابریشمی کلاسیک" },
+  "4": { code: "S201", price: 280000, name: "شال نخی تابستانی" },
+  "5": { code: "R104", price: 300000, name: "روسری نخی چهارخانه" }
+};
+
+// پر کردن کشوی مشتری
+const buyerSelect = document.getElementById("buyerName");
+for(const id in buyers){
+  const opt = document.createElement("option");
+  opt.value = id;
+  opt.textContent = buyers[id].name;
+  buyerSelect.appendChild(opt);
+}
+
+buyerSelect.addEventListener("change", ()=>{
+  const id = buyerSelect.value;
   if(buyers[id]){
     document.getElementById('buyerDetails').value = buyers[id].details;
     document.getElementById('buyerPhone').value = buyers[id].phone;
@@ -239,57 +234,94 @@ function fillBuyerInfo(select){
     document.getElementById('buyerDetails').value = "";
     document.getElementById('buyerPhone').value = "";
   }
-}
+});
 
-// محصولات
-const products = {
-  "1": { code: "R101", price: 250000 },
-  "2": { code: "R102", price: 320000 },
-  "3": { code: "R103", price: 420000 },
-  "4": { code: "S201", price: 280000 },
-  "5": { code: "R104", price: 300000 },
-};
+// افزودن ردیف جدید
+const tbody = document.querySelector("#invoiceTable tbody");
 
-function fillProductInfo(select) {
-  const row = select.closest('tr');
-  const id = select.value;
-  if(products[id]){
-    row.cells[0].querySelector('input').value = products[id].code;
-    row.cells[3].querySelector('input').value = products[id].price;
-    updateRow(select);
-  } else {
-    row.cells[0].querySelector('input').value = "";
-    row.cells[3].querySelector('input').value = 0;
-    updateRow(select);
+function createRow(){
+  const tr = document.createElement("tr");
+
+  // کد کالا
+  const tdCode = document.createElement("td");
+  const codeInput = document.createElement("input");
+  codeInput.readOnly = true;
+  tdCode.appendChild(codeInput);
+
+  // نام کالا
+  const tdName = document.createElement("td");
+  const nameSelect = document.createElement("select");
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "انتخاب کالا...";
+  nameSelect.appendChild(defaultOption);
+  for(const id in products){
+    const opt = document.createElement("option");
+    opt.value = id;
+    opt.textContent = products[id].name;
+    nameSelect.appendChild(opt);
   }
+  tdName.appendChild(nameSelect);
+
+  // تعداد
+  const tdQty = document.createElement("td");
+  const qtyInput = document.createElement("input");
+  qtyInput.type = "number";
+  qtyInput.value = 1;
+  qtyInput.min = 1;
+  tdQty.appendChild(qtyInput);
+
+  // قیمت واحد
+  const tdPrice = document.createElement("td");
+  const priceInput = document.createElement("input");
+  priceInput.type = "number";
+  priceInput.value = 0;
+  priceInput.readOnly = true;
+  tdPrice.appendChild(priceInput);
+
+  // جمع
+  const tdTotal = document.createElement("td");
+  tdTotal.className = "row-total";
+  tdTotal.textContent = "0";
+
+  tr.appendChild(tdCode);
+  tr.appendChild(tdName);
+  tr.appendChild(tdQty);
+  tr.appendChild(tdPrice);
+  tr.appendChild(tdTotal);
+
+  // event ها
+  nameSelect.addEventListener("change", ()=>{
+    const id = nameSelect.value;
+    if(products[id]){
+      codeInput.value = products[id].code;
+      priceInput.value = products[id].price;
+      updateRow(tr);
+    } else {
+      codeInput.value = "";
+      priceInput.value = 0;
+      updateRow(tr);
+    }
+  });
+
+  qtyInput.addEventListener("input", ()=>{
+    updateRow(tr);
+  });
+
+  return tr;
 }
 
-function updateRow(input){
-  const row = input.closest('tr');
-  const qty = parseFloat(row.cells[2].querySelector('input').value) || 0;
-  const price = parseFloat(row.cells[3].querySelector('input').value) || 0;
+function updateRow(tr){
+  const qty = parseFloat(tr.cells[2].querySelector("input").value) || 0;
+  const price = parseFloat(tr.cells[3].querySelector("input").value) || 0;
   const total = qty * price;
-  row.querySelector('.row-total').textContent = total.toLocaleString();
+  tr.querySelector(".row-total").textContent = total.toLocaleString();
   updateGrandTotal();
 }
 
 function updateGrandTotal(){
   let sum = 0;
-  document.querySelectorAll('.row-total').forEach(td=>{
+  document.querySelectorAll(".row-total").forEach(td=>{
     sum += parseFloat(td.textContent.replace(/,/g,'')) || 0;
   });
-  document.getElementById('grandTotal').textContent = sum.toLocaleString();
-}
-
-function addRow(){
-  const tbody = document.querySelector('#invoiceTable tbody');
-  const newRow = document.createElement('tr');
-  newRow.innerHTML = `
-    <td><input type="text" readonly></td>
-    <td>
-      <select onchange="fillProductInfo(this)">
-        <option value="">انتخاب کالا...</option>
-        <option value="1">روسری نخی طرح گل</option>
-        <option value="2">روسری حریر ساده</option>
-        <option value="3">روسری ابریشمی کلاسیک</option>
-        <option value="4
+  document
