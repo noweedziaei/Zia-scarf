@@ -222,11 +222,11 @@ th:nth-child(5), td:nth-child(5) { width: 22%; }
 let invoiceNumber = localStorage.getItem("invoiceNumber") || 1;
 document.getElementById("invoiceNumber").value = invoiceNumber.toString().padStart(2,"0");
 
-// لیست مشتری‌ها
+// مشتری‌ها
 const buyers = {
-  "1": { name: "حسین برومند", details: "مشهد بازار امام رضا (ع)", phone: "09120000001" },
-  "2": { name: "اقای امینیان", details: "مشهد، کوچه سرشور پلاک ۲۰", phone: "09120000002" },
-  "3": { name: "اقای ", details: "مشهد، خیابان طبرسی، پلاک ۳۰", phone: "09120000003" },
+  "1": { name: "مرادی", details: "مشهد، خیابان فلان، پلاک ۱۰", phone: "09120000001" },
+  "2": { name: "محمدی", details: "مشهد، خیابان بهمان، پلاک ۲۰", phone: "09120000002" },
+  "3": { name: "احمدی", details: "مشهد، خیابان دیگر، پلاک ۳۰", phone: "09120000003" },
   "4": { name: "کریمی", details: "مشهد، خیابان نمونه، پلاک ۴۰", phone: "09120000004" }
 };
 
@@ -241,7 +241,7 @@ function fillBuyerInfo(select){
   }
 }
 
-// لیست محصولات
+// محصولات
 const products = {
   "1": { code: "R101", price: 250000 },
   "2": { code: "R102", price: 320000 },
@@ -256,6 +256,10 @@ function fillProductInfo(select) {
   if(products[id]){
     row.cells[0].querySelector('input').value = products[id].code;
     row.cells[3].querySelector('input').value = products[id].price;
+    updateRow(select);
+  } else {
+    row.cells[0].querySelector('input').value = "";
+    row.cells[3].querySelector('input').value = 0;
     updateRow(select);
   }
 }
@@ -288,26 +292,4 @@ function addRow(){
         <option value="1">روسری نخی طرح گل</option>
         <option value="2">روسری حریر ساده</option>
         <option value="3">روسری ابریشمی کلاسیک</option>
-        <option value="4">شال نخی تابستانی</option>
-        <option value="5">روسری نخی چهارخانه</option>
-      </select>
-    </td>
-    <td><input type="number" value="1" min="1" onchange="updateRow(this)"></td>
-    <td><input type="number" value="0" min="0" readonly></td>
-    <td class="row-total">0</td>
-  `;
-  tbody.appendChild(newRow);
-}
-
-function saveInvoice(){
-  updateGrandTotal();
-  const invoice = document.getElementById('invoice');
-  const buttons = document.querySelector('.buttons');
-  buttons.style.display = 'none'; // دکمه‌ها در PDF نیان
-
-  const buyer = document.getElementById('buyerName').selectedOptions[0].text || 'بدون‌نام';
-  const fileName = `Factor_${document.getElementById('invoiceNumber').value}_${buyer}.pdf`;
-
-  html2pdf().from(invoice).set({
-    margin: [10,5,10,5],
-    filename: file
+        <option value="4
