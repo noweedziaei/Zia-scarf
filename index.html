@@ -160,4 +160,14 @@ function createRow(){
 
   const tdName = document.createElement("td");
   const nameSelect = document.createElement("select");
-  const defaultOption = document.createElement("option"); defaultOption.value=""; defaultOption.textContent="انتخاب کالا..."; nameSelect.appendChild(default
+  const defaultOption = document.createElement("option"); defaultOption.value=""; defaultOption.textContent="انتخاب کالا..."; nameSelect.appendChild(defaultOption);
+  for(const id in products){ 
+    const opt=document.createElement("option"); opt.value=id; opt.textContent=products[id].name; nameSelect.appendChild(opt);
+  }
+  tdName.appendChild(nameSelect);
+
+  const tdQty=document.createElement("td"); const qtyInput=document.createElement("input"); qtyInput.type="number"; qtyInput.value=1; qtyInput.min=1; tdQty.appendChild(qtyInput);
+
+  const tdPrice=document.createElement("td"); const priceInput=document.createElement("input"); priceInput.type="number"; priceInput.value=0; priceInput.readOnly=true; tdPrice.appendChild(priceInput);
+
+  const tdTotal=document.createElement("td
