@@ -8,14 +8,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
-body { font-family: Tahoma,sans-serif; margin:0; padding:10px; direction: rtl; background:#fff; color:#222; }
-#invoice { max-width:800px; margin:auto; padding:15px; border:2px solid #222; border-radius:10px; background:#fff; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-.header { display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:20px; }
-.brand { text-align:right; }
-.brand .en-name { font-family:'Playfair Display', serif; font-size:28px; margin-bottom:5px; }
+body { font-family: Tahoma, sans-serif; margin:0; padding:10px; direction: rtl; background:#fff; color:#222; }
+#invoice { max-width:850px; margin:auto; padding:20px; border:2px solid #222; border-radius:10px; background:#fff; box-shadow:0 0 10px rgba(0,0,0,0.1);}
+.header { text-align:center; margin-bottom:20px; }
+.brand .en-name { font-family:'Playfair Display', serif; font-size:32px; font-weight:600; margin-bottom:5px; }
 .brand .fa-name { font-size:16px; margin-bottom:5px; }
-.brand .address { font-size:12px; color:#555; }
-.invoice-info { text-align:left; font-size:13px; line-height:1.6; }
+.brand .address { font-size:12px; color:#555; margin-bottom:10px; }
+.invoice-info { text-align:left; font-size:13px; line-height:1.6; margin-bottom:20px; }
 .invoice-info input, .invoice-info select { border:none; border-bottom:1px solid #ccc; padding:3px; width:140px; font-size:12px; }
 .table-container { overflow-x:auto; margin-top:10px; }
 table { width:100%; border-collapse:collapse; table-layout: fixed; border:1px solid #222;}
@@ -36,7 +35,7 @@ th:nth-child(5), td:nth-child(5){width:20%;}
 .add-row { background:#007bff; }
 .add-row:hover { background:#0069d9; }
 
-/* استایل چاپ PDF */
+/* چاپ PDF */
 @media print {
   body { margin:0; padding:0; }
   #invoice { box-shadow:none; border:2px solid #222; }
@@ -48,19 +47,18 @@ th:nth-child(5), td:nth-child(5){width:20%;}
 <body>
 
 <div id="invoice">
-  <div class="header">
-    <div class="brand">
-      <div class="en-name">Zia Scarf</div>
-      <div class="fa-name">روسری ضیایی</div>
-      <div class="address">مشهد، ضلع شمالی بازار رضا، پاساژ ولیعصر، پلاک ۱۰۴</div>
-      <div class="fa-name">تلفن : ۰۹۱۵۶۸۶۱۳۲۲</div>
-    </div>
-    <div class="invoice-info">
-      شماره فاکتور: <input type="text" id="invoiceNumber" readonly><br>
-      نام خریدار: <select id="buyerName"></select><br>
-      مشخصات: <input type="text" id="buyerDetails" readonly><br>
-      شماره تلفن: <input type="text" id="buyerPhone" readonly>
-    </div>
+  <div class="header brand">
+    <div class="en-name">Zia Scarf</div>
+    <div class="fa-name">روسری ضیایی</div>
+    <div class="address">مشهد، ضلع شمالی بازار رضا، پاساژ ولیعصر، پلاک ۱۰۴</div>
+    <div class="fa-name">تلفن : ۰۹۱۵۶۸۶۱۳۲۲</div>
+  </div>
+
+  <div class="invoice-info">
+    شماره فاکتور: <input type="text" id="invoiceNumber" readonly><br>
+    نام خریدار: <select id="buyerName"></select><br>
+    مشخصات: <input type="text" id="buyerDetails" readonly><br>
+    شماره تلفن: <input type="text" id="buyerPhone" readonly>
   </div>
 
   <div class="table-container">
@@ -103,19 +101,11 @@ const buyers = {
   "3": { name:"حمیدی", details:"مشهد، خیابان برسی", phone:"091572727" }
 };
 
-// کالاها
-const products = {
-  "1": { code:"R101", name:"روسری ماری گلد دست دوز ۱۲۰", price:140000 },
-  "2": { code:"R102", name:"روسری ماری گلد دست دوز ۱۴۰", price:320000 },
-  "3": { code:"R103", name:"روسری ماری گلد منگوله", price:155000 },
-  "4": { code:"S201", name:"شال نخی ماری گلد", price:140000 },
-  "5": { code:"R104", name:"روسری برشکا ماری گلد", price:215000 }
-  "6": { code:"R105", name:"روسری  دور دوخت ۱۲۰", price:75000 },
-  "7": { code:"R107", name:"روسری هرمس پاییزه۱۴۰", price:135000 },
-  "8": { code:"R108", name:"شال پاییزه برشکا ماری گلد ", price:215000 }
-  "9": { code:"S109", name:"شال کریشه درختی مشکی", price:185000 },
-  "10": { code:"R110", name:"روسری کریشه درختی سایز بزرگ", price:220000 }
-};
+// کالاها (۳۰ مورد نمونه)
+const products = {};
+for(let i=1;i<=30;i++){
+  products[i] = { code:"P"+(100+i), name:"کالای نمونه "+i, price:Math.floor(Math.random()*200000)+50000 };
+}
 
 // پر کردن کشوی مشتری‌ها
 const buyerSelect = document.getElementById("buyerName");
