@@ -16,12 +16,12 @@ body { font-family: Tahoma, sans-serif; margin:0; padding:10px; direction: rtl; 
 .brand .fa-name { font-size:16px; margin-bottom:5px; }
 .brand .address { font-size:12px; color:#555; }
 .invoice-info { text-align:left; font-size:13px; line-height:1.6; }
-.invoice-info input, .invoice-info select { border:none; border-bottom:1px solid #ccc; padding:3px; width:140px; font-size:12px; }
+.invoice-info input, .invoice-info select { border:none; border-bottom:1px solid #ccc; padding:3px; width:140px; font-size:12px; background:#fff; }
 .table-container { overflow-x:auto; margin-top:10px; }
 table { width:100%; border-collapse:collapse; table-layout: fixed; border:1px solid #222;}
 th, td { border:1px solid #222; padding:6px; text-align:center; font-size:12px; white-space: nowrap; }
 th { background:#f0f0f0; }
-td input, td select, td textarea { border:none; text-align:center; width:100%; padding:3px; font-size:12px; }
+td input, td select, td textarea { border:none; text-align:center; width:100%; padding:3px; font-size:12px; background:#fff; color:#000; }
 th:nth-child(1), td:nth-child(1){width:12%;}
 th:nth-child(2), td:nth-child(2){width:38%;}
 th:nth-child(3), td:nth-child(3){width:10%;}
@@ -29,9 +29,9 @@ th:nth-child(4), td:nth-child(4){width:20%;}
 th:nth-child(5), td:nth-child(5){width:20%;}
 .transaction-box { display:flex; flex-wrap:wrap; gap:10px; margin-top:15px; }
 .transaction-box div { flex:1; min-width:120px; }
-.transaction-box input, .transaction-box select, .transaction-box textarea { width:100%; border:1px solid #222; border-radius:5px; padding:4px; }
+.transaction-box input, .transaction-box select, .transaction-box textarea { width:100%; border:1px solid #222; border-radius:5px; padding:4px; background:#fff; color:#000; }
 .footer { margin-top:15px; }
-.footer textarea { width:100%; border:1px solid #222; border-radius:5px; padding:6px; font-size:12px; resize:vertical; margin-top:10px; }
+.footer textarea { width:100%; border:1px solid #222; border-radius:5px; padding:6px; font-size:12px; resize:vertical; margin-top:10px; background:#fff; color:#000; }
 .total { text-align:left; font-weight:bold; margin-top:5px; font-size:13px; }
 .buttons { margin-top:15px; text-align:center; }
 .btn { background:#222; color:#fff; border:none; border-radius:6px; padding:10px 15px; font-size:13px; cursor:pointer; margin:3px; }
@@ -44,7 +44,7 @@ th:nth-child(5), td:nth-child(5){width:20%;}
   body { margin:0; padding:0; }
   #invoice { box-shadow:none; border:2px solid #222; }
   .buttons { display:none; }
-  input, select, textarea { border:none; }
+  input, select, textarea { border:none; background:#fff; color:#000; }
 }
 </style>
 </head>
@@ -160,70 +160,4 @@ function createRow(){
 
   const tdName = document.createElement("td");
   const nameSelect = document.createElement("select");
-  const defaultOption = document.createElement("option"); defaultOption.value=""; defaultOption.textContent="انتخاب کالا..."; nameSelect.appendChild(defaultOption);
-  for(const id in products){ const opt=document.createElement("option"); opt.value=id; opt.textContent=products[id].name; nameSelect.appendChild(opt);}
-  tdName.appendChild(nameSelect);
-
-  const tdQty=document.createElement("td"); const qtyInput=document.createElement("input"); qtyInput.type="number"; qtyInput.value=1; qtyInput.min=1; tdQty.appendChild(qtyInput);
-
-  const tdPrice=document.createElement("td"); const priceInput=document.createElement("input"); priceInput.type="number"; priceInput.value=0; priceInput.readOnly=true; tdPrice.appendChild(priceInput);
-
-  const tdTotal=document.createElement("td"); tdTotal.className="row-total"; tdTotal.textContent="0";
-
-  tr.appendChild(tdCode); tr.appendChild(tdName); tr.appendChild(tdQty); tr.appendChild(tdPrice); tr.appendChild(tdTotal);
-
-  // event ها
-  nameSelect.addEventListener("change", ()=>{
-    const id=nameSelect.value;
-    if(products[id]){ codeInput.value=products[id].code; priceInput.value=products[id].price; updateRow(tr); }
-    else { codeInput.value=""; priceInput.value=0; updateRow(tr);}
-  });
-  qtyInput.addEventListener("input", ()=>{ updateRow(tr); });
-
-  return tr;
-}
-
-function updateRow(tr){
-  const qty = parseFloat(tr.cells[2].querySelector("input").value)||0;
-  const price = parseFloat(tr.cells[3].querySelector("input").value)||0;
-  const total = qty*price;
-  tr.querySelector(".row-total").textContent = total.toLocaleString();
-  updateGrandTotal();
-}
-
-function updateGrandTotal(){
-  let sum=0;
-  document.querySelectorAll(".row-total").forEach(td=>{sum+=parseFloat(td.textContent.replace(/,/g,''))||0;});
-  let transactionAmount = parseFloat(document.getElementById("transactionAmount").value)||0;
-  const type = document.getElementById("transactionType").value;
-  if(type) sum -= transactionAmount;
-  if(sum<0) sum=0;
-  document.getElementById("grandTotal").textContent=sum.toLocaleString();
-}
-
-// افزودن ردیف
-document.querySelector(".add-row").addEventListener("click", ()=>{ tbody.appendChild(createRow()); });
-
-// شروع با یک ردیف
-tbody.appendChild(createRow());
-
-// بروزرسانی جمع کل هنگام تغییر تراکنش
-document.getElementById("transactionAmount").addEventListener("input", updateGrandTotal);
-document.getElementById("transactionType").addEventListener("change", updateGrandTotal);
-
-// ذخیره PDF
-document.getElementById("saveBtn").addEventListener("click", ()=>{
-  updateGrandTotal();
-  const buttonsDiv = document.querySelector(".buttons");
-  buttonsDiv.style.display="none"; 
-  html2pdf().from(document.getElementById("invoice")).save("Invoice-"+invoiceNumberInput.value+".pdf").then(()=>{
-    buttonsDiv.style.display="block";
-    invoiceNumber++;
-    localStorage.setItem("invoiceNumber", invoiceNumber);
-    invoiceNumberInput.value = invoiceNumber.toString().padStart(2,"0");
-  });
-});
-</script>
-
-</body>
-</html>
+  const defaultOption = document.createElement("option"); defaultOption.value=""; defaultOption.textContent="انتخاب کالا..."; nameSelect.appendChild(default
