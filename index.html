@@ -124,7 +124,7 @@ const buyers = {
   "3": { name:"حمیدی", details:"مشهد، خیابان برسی", phone:"091572727" }
 };
 
-// کالاها (۳۰ نمونه)
+// کالاها ۳۰ نمونه
 const products = {};
 for(let i=1;i<=30;i++){
   products[i] = { code:"P"+(100+i), name:"کالای نمونه "+i, price:Math.floor(Math.random()*200000)+50000 };
@@ -152,32 +152,55 @@ const tbody = document.querySelector("#invoiceTable tbody");
 
 function createRow(){
   const tr = document.createElement("tr");
-  const tdCode = document.createElement("td");
-  const codeInput = document.createElement("input"); codeInput.readOnly=true; tdCode.appendChild(codeInput);
-  const tdName = document.createElement("td");
-  const nameSelect = document.createElement("select");
-  const defaultOption = document.createElement("option"); defaultOption.value=""; defaultOption.textContent="انتخاب کالا..."; nameSelect.appendChild(defaultOption);
-  for(const id in products){
-    const opt = document.createElement("option"); opt.value=id; opt.textContent=products[id].name; nameSelect.appendChild(opt);
-  }
+  const tdCode = document.createElement("td"); const codeInput=document.createElement("input"); codeInput.readOnly=true; tdCode.appendChild(codeInput);
+  const tdName = document.createElement("td"); const nameSelect=document.createElement("select"); const defaultOpt=document.createElement("option"); defaultOpt.value=""; defaultOpt.textContent="انتخاب کالا..."; nameSelect.appendChild(defaultOpt);
+  for(const id in products){ const opt=document.createElement("option"); opt.value=id; opt.textContent=products[id].name; nameSelect.appendChild(opt);}
   tdName.appendChild(nameSelect);
   const tdQty = document.createElement("td"); const qtyInput=document.createElement("input"); qtyInput.type="number"; qtyInput.value=1; qtyInput.min=1; tdQty.appendChild(qtyInput);
   const tdPrice = document.createElement("td"); const priceInput=document.createElement("input"); priceInput.type="number"; priceInput.value=0; priceInput.readOnly=true; tdPrice.appendChild(priceInput);
   const tdTotal = document.createElement("td"); tdTotal.className="row-total"; tdTotal.textContent="0";
   tr.appendChild(tdCode); tr.appendChild(tdName); tr.appendChild(tdQty); tr.appendChild(tdPrice); tr.appendChild(tdTotal);
 
-  nameSelect.addEventListener("change", ()=>{
-    const id = nameSelect.value;
-    if(products[id]){
-      codeInput.value = products[id].code;
-      priceInput.value = products[id].price;
-      updateRow(tr);
-    } else { codeInput.value=""; priceInput.value=0; updateRow(tr);}
-  });
+  nameSelect.addEventListener("change", ()=>{ const id=nameSelect.value; if(products[id]){ codeInput.value=products[id].code; priceInput.value=products[id].price; updateRow(tr); } else{ codeInput.value=""; priceInput.value=0; updateRow(tr); }});
   qtyInput.addEventListener("input", ()=>{ updateRow(tr); });
   return tr;
 }
 
 function updateRow(tr){
-  const qty = parseFloat(tr.cells[2].querySelector("input").value)||0;
-  const price = parseFloat(tr.cells[3
+  const qty=parseFloat(tr.cells[2].querySelector("input").value)||0;
+  const price=parseFloat(tr.cells[3].querySelector("input").value)||0;
+  const total=qty*price;
+  tr.querySelector(".row-total").textContent=total.toLocaleString();
+  updateGrandTotal();
+}
+
+function updateGrandTotal(){
+  let sum=0;
+  document.querySelectorAll(".row-total").forEach(td=>{ sum+=parseFloat(td.textContent.replace(/,/g,''))||0; });
+  const tranAmount=parseFloat(document.getElementById("transactionAmount").value)||0;
+  const tranType=document.getElementById("transactionType").value;
+  if(tranType==="discount" || tranType==="return") sum-=tranAmount;
+  if(sum<0) sum=0;
+  document.getElementById("grandTotal").textContent=sum.toLocaleString();
+}
+
+document.querySelector(".add-row").addEventListener("click", ()=>{ tbody.appendChild(createRow()); });
+tbody.appendChild(createRow());
+
+document.getElementById("saveBtn").addEventListener("click", ()=>{
+  updateGrandTotal();
+  const buttonsDiv = document.querySelector(".buttons");
+  buttonsDiv.style.display="none"; 
+  html2pdf().from(document.getElementById("invoice")).save("Invoice-"+invoiceNumberInput.value+".pdf").then(()=>{
+    buttonsDiv.style.display="block";
+    invoiceNumber++;
+    localStorage.setItem("invoiceNumber", invoiceNumber);
+    invoiceNumberInput.value = invoiceNumber.toString().padStart(2,"0");
+  });
+});
+
+document.getElementById("transactionType").addEventListener("change", updateGrandTotal);
+document.getElementById("transactionAmount").addEventListener("input", updateGrandTotal);
+</script>
+</body>
+</html>
