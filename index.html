@@ -3,204 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>فاکتور Zia Scarf</title>
+<title>پنل مدیریت | Zia Scarf</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
-body { font-family: Tahoma, sans-serif; margin:0; padding:10px; direction: rtl; background:#fff; color:#222; }
-#invoice { max-width:850px; margin:auto; padding:20px; border:2px solid #222; border-radius:10px; background:#fff; box-shadow:0 0 10px rgba(0,0,0,0.1);}
-.header { display:flex; justify-content:space-between; flex-wrap:wrap; margin-bottom:20px; }
-.brand { text-align:right; }
-.brand .en-name { font-family:'Playfair Display', serif; font-size:28px; font-weight:600; margin-bottom:5px; }
-.brand .fa-name { font-size:16px; margin-bottom:5px; }
-.brand .address { font-size:12px; color:#555; }
-.invoice-info { text-align:left; font-size:13px; line-height:1.6; }
-.invoice-info input, .invoice-info select { border:none; border-bottom:1px solid #ccc; padding:3px; width:140px; font-size:12px; background:#fff; }
-.table-container { overflow-x:auto; margin-top:10px; }
-table { width:100%; border-collapse:collapse; table-layout: fixed; border:1px solid #222;}
-th, td { border:1px solid #222; padding:6px; text-align:center; font-size:12px; white-space: nowrap; }
-th { background:#f0f0f0; }
-td input, td select, td textarea { border:none; text-align:center; width:100%; padding:3px; font-size:12px; background:#fff; color:#000; }
-th:nth-child(1), td:nth-child(1){width:12%;}
-th:nth-child(2), td:nth-child(2){width:38%;}
-th:nth-child(3), td:nth-child(3){width:10%;}
-th:nth-child(4), td:nth-child(4){width:20%;}
-th:nth-child(5), td:nth-child(5){width:20%;}
-.transaction-box { display:flex; flex-wrap:wrap; gap:10px; margin-top:15px; }
-.transaction-box div { flex:1; min-width:120px; }
-.transaction-box input, .transaction-box select, .transaction-box textarea { width:100%; border:1px solid #222; border-radius:5px; padding:4px; background:#fff; color:#000; }
-.footer { margin-top:15px; }
-.footer textarea { width:100%; border:1px solid #222; border-radius:5px; padding:6px; font-size:12px; resize:vertical; margin-top:10px; background:#fff; color:#000; }
-.total { text-align:left; font-weight:bold; margin-top:5px; font-size:13px; }
-.buttons { margin-top:15px; text-align:center; }
-.btn { background:#222; color:#fff; border:none; border-radius:6px; padding:10px 15px; font-size:13px; cursor:pointer; margin:3px; }
-.btn:hover { background:#444; }
-.add-row { background:#007bff; }
-.add-row:hover { background:#0069d9; }
-
-/* چاپ PDF */
-@media print {
-  body { margin:0; padding:0; }
-  #invoice { box-shadow:none; border:2px solid #222; }
-  .buttons { display:none; }
-  input, select, textarea { border:none; background:#fff; color:#000; }
+body {
+  font-family: Tahoma, sans-serif;
+  direction: rtl;
+  margin: 0;
+  background: #fff;
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.header .en-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px;
+  font-weight: 600;
+}
+.header .fa-name {
+  font-size: 16px;
+  margin-top: 5px;
+}
+.panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 220px;
+}
+.btn {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #111;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 15px;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.btn:hover {
+  background: #111;
+  color: #fff;
+}
+.footer {
+  position: absolute;
+  bottom: 20px;
+  font-size: 12px;
+  color: #666;
+}
+@media (max-width: 600px) {
+  .btn { font-size: 14px; padding: 12px; }
+  .header .en-name { font-size: 28px; }
 }
 </style>
 </head>
 <body>
 
-<div id="invoice">
-  <div class="header">
-    <div class="brand">
-      <div class="en-name">Zia Scarf</div>
-      <div class="fa-name">روسری ضیایی</div>
-      <div class="address">مشهد، ضلع شمالی بازار رضا، پاساژ ولیعصر، پلاک ۱۰۴</div>
-      <div class="fa-name">تلفن : ۰۹۱۵۶۸۶۱۳۲۲</div>
-    </div>
-    <div class="invoice-info">
-      شماره فاکتور: <input type="text" id="invoiceNumber" readonly><br>
-      نام خریدار: <select id="buyerName"></select><br>
-      مشخصات: <input type="text" id="buyerDetails" readonly><br>
-      شماره تلفن: <input type="text" id="buyerPhone" readonly>
-    </div>
-  </div>
-
-  <div class="table-container">
-    <table id="invoiceTable">
-      <thead>
-        <tr>
-          <th>کد کالا</th>
-          <th>نام کالا</th>
-          <th>تعداد</th>
-          <th>قیمت واحد</th>
-          <th>جمع</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-
-  <div class="transaction-box">
-    <div>
-      <label>نوع تراکنش:</label>
-      <select id="transactionType">
-        <option value="">انتخاب...</option>
-        <option value="discount">تخفیف</option>
-        <option value="return">مرجوعی</option>
-      </select>
-    </div>
-    <div>
-      <label>مبلغ:</label>
-      <input type="number" id="transactionAmount" value="0" min="0">
-    </div>
-    <div>
-      <label>توضیحات تراکنش:</label>
-      <textarea id="transactionNote" rows="1" placeholder="توضیح تراکنش..."></textarea>
-    </div>
-  </div>
-
-  <div class="footer">
-    <label for="note">توضیحات اضافی:</label>
-    <textarea id="note" rows="3" placeholder="توضیحات اضافی..."></textarea>
-    <div class="total">جمع کل: <span id="grandTotal">0</span> تومان</div>
-  </div>
+<div class="header">
+  <div class="en-name">Zia Scarf</div>
+  <div class="fa-name">روسری ضیایی</div>
 </div>
 
-<div class="buttons">
-  <button class="btn add-row">➕ افزودن ردیف</button>
-  <button class="btn" id="saveBtn">ثبت و دریافت PDF</button>
+<div class="panel">
+  <button class="btn" onclick="location.href='factor.html'">📄 فاکتور</button>
+  <button class="btn" onclick="location.href='account.html'">💰 حساب</button>
+  <button class="btn" onclick="location.href='check.html'">🧾 چک</button>
 </div>
 
-<script>
-// شماره فاکتور
-const invoiceNumberInput = document.getElementById("invoiceNumber");
-let invoiceNumber = localStorage.getItem("invoiceNumber") || 1;
-invoiceNumberInput.value = invoiceNumber.toString().padStart(2,"0");
+<div class="footer">طراحی شده توسط Navid Ziaei</div>
 
-// مشتری‌ها
-const buyers = {
-  "1": { name:"حسن برومند", details:"مشهد، بازار امام رضا (ع)", phone:"091572727" },
-  "2": { name:"اکبر برومند", details:"مشهد، بازار امام رضا (ع)", phone:"091572727" },
-  "3": { name:"حمیدی", details:"مشهد، خیابان برسی", phone:"091572727" }
-};
-
-// کالاها ۳۰ نمونه
-const products = {};
-for(let i=1;i<=30;i++){
-  products[i] = { code:"P"+(100+i), name:"کالای نمونه "+i, price:Math.floor(Math.random()*200000)+50000 };
-}
-
-// پر کردن کشوی مشتری‌ها
-const buyerSelect = document.getElementById("buyerName");
-for(const id in buyers){
-  const opt = document.createElement("option");
-  opt.value = id; opt.textContent = buyers[id].name;
-  buyerSelect.appendChild(opt);
-}
-buyerSelect.addEventListener("change", ()=>{
-  const id = buyerSelect.value;
-  if(buyers[id]){
-    document.getElementById("buyerDetails").value = buyers[id].details;
-    document.getElementById("buyerPhone").value = buyers[id].phone;
-  } else {
-    document.getElementById("buyerDetails").value="";
-    document.getElementById("buyerPhone").value="";
-  }
-});
-
-const tbody = document.querySelector("#invoiceTable tbody");
-
-function createRow(){
-  const tr = document.createElement("tr");
-  const tdCode = document.createElement("td"); const codeInput=document.createElement("input"); codeInput.readOnly=true; tdCode.appendChild(codeInput);
-  const tdName = document.createElement("td"); const nameSelect=document.createElement("select"); const defaultOpt=document.createElement("option"); defaultOpt.value=""; defaultOpt.textContent="انتخاب کالا..."; nameSelect.appendChild(defaultOpt);
-  for(const id in products){ const opt=document.createElement("option"); opt.value=id; opt.textContent=products[id].name; nameSelect.appendChild(opt);}
-  tdName.appendChild(nameSelect);
-  const tdQty = document.createElement("td"); const qtyInput=document.createElement("input"); qtyInput.type="number"; qtyInput.value=1; qtyInput.min=1; tdQty.appendChild(qtyInput);
-  const tdPrice = document.createElement("td"); const priceInput=document.createElement("input"); priceInput.type="number"; priceInput.value=0; priceInput.readOnly=true; tdPrice.appendChild(priceInput);
-  const tdTotal = document.createElement("td"); tdTotal.className="row-total"; tdTotal.textContent="0";
-  tr.appendChild(tdCode); tr.appendChild(tdName); tr.appendChild(tdQty); tr.appendChild(tdPrice); tr.appendChild(tdTotal);
-
-  nameSelect.addEventListener("change", ()=>{ const id=nameSelect.value; if(products[id]){ codeInput.value=products[id].code; priceInput.value=products[id].price; updateRow(tr); } else{ codeInput.value=""; priceInput.value=0; updateRow(tr); }});
-  qtyInput.addEventListener("input", ()=>{ updateRow(tr); });
-  return tr;
-}
-
-function updateRow(tr){
-  const qty=parseFloat(tr.cells[2].querySelector("input").value)||0;
-  const price=parseFloat(tr.cells[3].querySelector("input").value)||0;
-  const total=qty*price;
-  tr.querySelector(".row-total").textContent=total.toLocaleString();
-  updateGrandTotal();
-}
-
-function updateGrandTotal(){
-  let sum=0;
-  document.querySelectorAll(".row-total").forEach(td=>{ sum+=parseFloat(td.textContent.replace(/,/g,''))||0; });
-  const tranAmount=parseFloat(document.getElementById("transactionAmount").value)||0;
-  const tranType=document.getElementById("transactionType").value;
-  if(tranType==="discount" || tranType==="return") sum-=tranAmount;
-  if(sum<0) sum=0;
-  document.getElementById("grandTotal").textContent=sum.toLocaleString();
-}
-
-document.querySelector(".add-row").addEventListener("click", ()=>{ tbody.appendChild(createRow()); });
-tbody.appendChild(createRow());
-
-document.getElementById("saveBtn").addEventListener("click", ()=>{
-  updateGrandTotal();
-  const buttonsDiv = document.querySelector(".buttons");
-  buttonsDiv.style.display="none"; 
-  html2pdf().from(document.getElementById("invoice")).save("Invoice-"+invoiceNumberInput.value+".pdf").then(()=>{
-    buttonsDiv.style.display="block";
-    invoiceNumber++;
-    localStorage.setItem("invoiceNumber", invoiceNumber);
-    invoiceNumberInput.value = invoiceNumber.toString().padStart(2,"0");
-  });
-});
-
-document.getElementById("transactionType").addEventListener("change", updateGrandTotal);
-document.getElementById("transactionAmount").addEventListener("input", updateGrandTotal);
-</script>
 </body>
 </html>
