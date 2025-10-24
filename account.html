@@ -1,1 +1,134 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لیست مشتریان | Zia Scarf</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family: Tahoma, sans-serif;
+  direction: rtl;
+  margin: 0;
+  background: #fff;
+  color: #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.header .en-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+}
+.header .fa-name {
+  font-size: 16px;
+  margin-top: 5px;
+}
+.table-container {
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid #111;
+  border-radius: 10px;
+  overflow: hidden;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+}
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  font-size: 14px;
+}
+th {
+  background: #f5f5f5;
+  font-weight: bold;
+}
+tr:hover {
+  background: #f9f9f9;
+}
+a {
+  text-decoration: none;
+  color: #111;
+  font-weight: 500;
+}
+a:hover {
+  color: #007bff;
+}
+.back-btn {
+  margin-top: 25px;
+  border: 1px solid #111;
+  border-radius: 8px;
+  padding: 10px 20px;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.back-btn:hover {
+  background: #111;
+  color: #fff;
+}
+@media (max-width: 600px) {
+  th, td { font-size: 13px; padding: 8px; }
+  .header .en-name { font-size: 26px; }
+}
+</style>
+</head>
+<body>
 
+<div class="header">
+  <div class="en-name">Zia Scarf</div>
+  <div class="fa-name">روسری ضیایی</div>
+</div>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>نام مشتری</th>
+        <th>آدرس</th>
+        <th>صفحه حساب</th>
+      </tr>
+    </thead>
+    <tbody id="customerList"></tbody>
+  </table>
+</div>
+
+<button class="back-btn" onclick="location.href='index.html'">بازگشت به پنل</button>
+
+<script>
+// لیست مشتریان
+const customers = [
+  { name: "اکبر برومند", address: "مشهد، بازار امام رضا (ع)", link: "account-akbar.html" },
+  { name: "حسن برومند", address: "مشهد، بازار امام رضا (ع)", link: "account-hasan.html" },
+  { name: "حمیدی", address: "مشهد، خیابان برسی", link: "account-hamidi.html" },
+  { name: "رحمانی", address: "مشهد، پاسداران ۵", link: "account-rahmani.html" },
+  { name: "شفیعی", address: "مشهد، بلوار صیاد", link: "account-shafiei.html" },
+  { name: "کریمی", address: "مشهد، احمدآباد", link: "account-karimi.html" }
+];
+
+// مرتب‌سازی بر اساس حروف الفبا
+customers.sort((a, b) => a.name.localeCompare(b.name, 'fa'));
+
+const tbody = document.getElementById("customerList");
+
+customers.forEach(c => {
+  const tr = document.createElement("tr");
+  tr.innerHTML = `
+    <td>${c.name}</td>
+    <td>${c.address}</td>
+    <td><a href="${c.link}">مشاهده</a></td>
+  `;
+  tbody.appendChild(tr);
+});
+</script>
+
+</body>
+</html>
