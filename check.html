@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حساب مشتری - حمیدی</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+body {
+  font-family: Tahoma, sans-serif;
+  margin: 0;
+  padding: 10px;
+  direction: rtl;
+  background: #fff;
+  color: #222;
+}
+#account {
+  max-width: 800px;
+  margin: auto;
+  padding: 15px;
+  border: 2px solid #222;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.brand {
+  text-align: right;
+}
+.brand .en-name {
+  font-family:'Playfair Display', serif;
+  font-size:28px;
+  margin-bottom:5px;
+}
+.brand .fa-name {
+  font-size:16px;
+  margin-bottom:5px;
+}
+.brand .address {
+  font-size:12px;
+  color:#555;
+}
+.customer-name {
+  text-align:left;
+  font-size:16px;
+  font-weight:bold;
+  margin-top:10px;
+}
+.table-container {
+  overflow-x:auto;
+  margin-top:10px;
+}
+table {
+  width:100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  border:1px solid #222;
+}
+th, td {
+  border:1px solid #222;
+  padding:6px;
+  text-align:center;
+  font-size:12px;
+  white-space: nowrap;
+}
+th {
+  background:#f0f0f0;
+}
+td input, td select {
+  border:none;
+  text-align:center;
+  width:100%;
+  padding:3px;
+  font-size:12px;
+  background: transparent;
+}
+.total-box {
+  margin-top:10px;
+  font-weight:bold;
+  font-size:13px;
+  text-align:left;
+}
+.buttons {
+  margin-top:15px;
+  text-align:center;
+}
+.btn {
+  background:#222;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  padding:10px 15px;
+  font-size:13px;
+  cursor:pointer;
+  margin:3px;
+}
+.btn:hover { background:#444; }
+.add-row { background:#007bff; }
+.add-row:hover { background:#0069d9; }
+
+@media print {
+  body { margin:0; padding:0; }
+  #account { box-shadow:none; border:2px solid #222; }
+  .buttons { display:none; }
+  input, select { border:none; background:white !important; }
+}
+</style>
+</head>
+<body>
+
+<div id="account">
+  <div class="header">
+    <div class="brand">
+      <div class="en-name">Zia Scarf</div>
+      <div class="fa-name">روسری ضیایی</div>
+      <div class="address">مشهد، ضلع شمالی بازار رضا، پاساژ ولیعصر، پلاک ۱۰۴</div>
+      <div class="fa-name">تلفن: ۰۹۱۵۶۸۶۱۳۲۲</div>
+    </div>
+    <div class="customer-name">نام مشتری: حمیدی</div>
+  </div>
+
+  <div class="table-container">
+    <table id="accountTable">
+      <thead>
+        <tr>
+          <th>ردیف</th>
+          <th>نوع تراکنش</th>
+          <th>توضیحات</th>
+          <th>مبلغ (تومان)</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="total-box">جمع کل: <span id="grandTotal">0</span> تومان</div>
+</div>
+
+<div class="buttons">
+  <button class="btn add-row">➕ افزودن ردیف</button>
+  <button class="btn" id="saveBtn">📄 دریافت PDF</button>
+</div>
+
+<script>
+const tbody = document.querySelector("#accountTable tbody");
+
+function createRow(index){
+  const tr = document.createElement("tr");
+
+  const tdIndex = document.createElement("td");
+  tdIndex.textContent = index;
+
+  const tdType = document.createElement("td");
+  const typeSelect = document.createElement("select");
+  ["","فاکتور نقدی","چک","مرجوعی","تخفیف"].forEach(v=>{
+    const opt = document.createElement("option");
+    opt.value=v; opt.textContent=v;
+    typeSelect.appendChild(opt);
+  });
+  tdType.appendChild(typeSelect);
+
+  const tdNote = document.createElement("td");
+  const noteInput = document.createElement("input");
+  noteInput.type="text";
+  tdNote.appendChild(noteInput);
+
+  const tdAmount = document.createElement("td");
+  const amountInput = document.createElement("input");
+  amountInput.type="number";
+  amountInput.value=0;
+  tdAmount.appendChild(amountInput);
+
+  amountInput.addEventListener("input", updateGrandTotal);
+
+  tr.appendChild(tdIndex);
+  tr.appendChild(tdType);
+  tr.appendChild(tdNote);
+  tr.appendChild(tdAmount);
+
+  return tr;
+}
+
+function updateGrandTotal(){
+  let sum=0;
+  document.querySelectorAll("#accountTable tbody tr").forEach(tr=>{
+    const val=parseFloat(tr.cells[3].querySelector("input").value)||0;
+    sum+=val;
+  });
+  document.getElementById("grandTotal").textContent=sum.toLocaleString();
+}
+
+// افزودن ردیف جدید
+document.querySelector(".add-row").addEventListener("click", ()=>{
+  const index = tbody.children.length + 1;
+  tbody.appendChild(createRow(index));
+});
+
+// شروع با یک ردیف
+tbody.appendChild(createRow(1));
+
+// دریافت PDF
+document.getElementById("saveBtn").addEventListener("click", ()=>{
+  updateGrandTotal();
+  const buttonsDiv = document.querySelector(".buttons");
+  buttonsDiv.style.display="none";
+  html2pdf().from(document.getElementById("account")).save("Account-Hamidi.pdf").then(()=>{
+    buttonsDiv.style.display="block";
+  });
+});
+</script>
+
+</body>
+</html>
